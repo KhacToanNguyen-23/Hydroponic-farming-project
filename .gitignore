@@ -1,0 +1,15 @@
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# PlatformIO / Embedded build artifacts
+.pio/
+.pioenvs/
+.piolibdeps/
+build/
+
+# Temp files
+*.tmp
+*.log

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "remote-timer-control",
+    "title": "Cài đặt thời gian và tần suất tưới từ xa qua App",
+    "user_visible_behavior": "Không cần phải ra tận tủ điện để chỉnh thủ công",
+    "verification_command": "Thay đổi thông số timer trên App di động và ESP32 cập nhật lịch tưới thành công trong vòng < 5 giây",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "rain-sensor-override",
+    "title": "Tự động ngắt/giảm tưới khi phát hiện trời mưa",
+    "user_visible_behavior": "Tránh ngập úng rễ, làm loãng dung dịch dinh dưỡng và tiết kiệm điện",
+    "verification_command": "Cảm biến mưa bị ướt, ESP32 ngắt ngay lập tức lượt tưới hiện tại và tạm hoãn lịch tưới tiếp theo cho đến khi cảm biến khô",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "water-level-dry-run-protection",
+    "title": "Tự động tắt máy bơm và phát cảnh báo khi cạn nước thùng chứa",
+    "user_visible_behavior": "Máy bơm 220V không bị cháy do chạy khô",
+    "verification_command": "Phao mực nước hạ xuống mức cạn, Relay máy bơm ngắt ngay lập tức và phát thông báo PUSH Cảnh báo cạn nước tới điện thoại",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P1"
+  },
+  {
+    "id": "climate-monitoring-dht22",
+    "title": "Theo dõi nhiệt độ & độ ẩm không khí xung quanh 5 trụ từ xa",
+    "user_visible_behavior": "Biết được thời tiết thực tế tại vườn để điều chỉnh chế độ tưới phù hợp",
+    "verification_command": "Dữ liệu từ cảm biến DHT22/SHT30 hiển thị liên tục và cập nhật mỗi 30 giây trên ứng dụng di động",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "",
+    "priority": "P2"
+  }
+]
