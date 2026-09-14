@@ -1,88 +1,89 @@
-# 🌿 Nâng cấp Hệ thống Tưới Thông minh 5 Trụ Thủy canh qua ESP32 IoT
+# ESP32 Smart Irrigation IoT System for 5-Tower Hydroponics
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Hardware-ESP32%20DevKit-green.svg)](https://www.espressif.com/)
 [![Protocol](https://img.shields.io/badge/Protocol-MQTT%20%7C%20Blynk-orange.svg)](https://blynk.io/)
 
 > [!IMPORTANT]
-> **PHẠM VI DỰ ÁN (PROJECT SCOPE):**  
-> Dự án này tập trung **phát triển & tích hợp giải pháp phần mềm IoT, vi điều khiển ESP32 và các cảm biến hỗ trợ** nhằm nâng cấp thông minh hóa cho một hệ thống trồng rau thủy canh hồi lưu 5 trụ **ĐÃ CÓ SẴN VÀ ĐANG VẬN HÀNH THỰC TẾ**.  
+> **PROJECT SCOPE NOTICE:**  
+> This project focuses exclusively on **developing software, firmware, and integrating IoT sensors/controllers** to add smart capabilities to an **EXISTING AND FULLY OPERATIONAL 5-tower recirculating hydroponic system**.  
 >  
-> ⚠️ **Dự án KHÔNG bao gồm:** Thi công khung giàn, làm trụ trồng, lắp ống cơ khí hay tự tay build hệ thống thủy canh từ con số 0.
+> This project does **NOT** involve building hydroponic towers, mechanical plumbing, structural frames, or constructing a hydroponic farm from scratch.
 
 ---
 
-## 📌 Bối cảnh & Lý do Nâng cấp
+## Project Context and Upgrade Motivation
 
-Hệ thống trồng rau thủy canh 5 trụ ngoài trời hiện tại đã vận hành ổn định. Tuy nhiên, tủ điện cũ chỉ trang bị **bộ hẹn giờ điện tử công tắc cơ thủ công**:
-* **Hạn chế cũ:**
-  * Muốn thay đổi thời gian tưới/nghỉ phải ra tận tủ điện để bấm nút cài thủ công.
-  * Tưới cố định theo giờ nên khi **trời mưa lớn**, hệ thống vẫn tưới ➔ Lãng phí điện, ngập úng rễ và làm loãng dung dịch dinh dưỡng.
-  * Khi thùng chứa bị **cạn nước**, máy bơm vẫn chạy ➔ Nguy cơ cháy máy bơm 220V.
-  * Không theo dõi được nhiệt độ và độ ẩm thực tế ngoài vườn khi đi xa.
+The existing 5-tower outdoor hydroponic farming system is already operational. However, its original control box relied on a basic **manual electronic timer switch**:
 
-* **Giải pháp Phần mềm & IoT mới:**
-  * Bổ sung vi điều khiển **ESP32** kết nối Wifi/4G.
-  * Tích hợp cảm biến mưa, cảm biến nhiệt/ẩm (DHT22) và phao cảm biến cạn nước.
-  * Phát triển **Firmware C++ (Dual Core + Offline Failsafe)** & **Giao diện di động (Blynk / MQTT)** để điều khiển và giám sát từ xa.
+* **Legacy Limitations:**
+  * Adjusting irrigation/pause durations required physical interaction with buttons at the outdoor control panel.
+  * Irrigation ran strictly on fixed time slots. During **heavy rain**, the system continued watering, leading to wasted electricity, root oversaturation, and nutrient solution dilution.
+  * In the event of a **depleted water reservoir**, the pump continued to run, risking 220V AC pump motor burn-out.
+  * No remote monitoring for ambient temperature and humidity while away from the site.
 
----
-
-## ✨ Tính năng Nổi bật của Phần mềm IoT
-
-- 📱 **Điều khiển & Cài đặt Từ xa (Remote Control):** Thay đổi số phút Bật tưới / Nghỉ tưới và Bật/Tắt bơm tức thì qua 4G/Wifi từ bất kỳ đâu.
-- 🌧️ **Tự động Tạm hoãn khi Mưa (Rain Override):** Phát hiện mưa ngay lập tức ➔ Ngắt lượt tưới hiện tại để bảo vệ dinh dưỡng và tiết kiệm điện.
-- 🛡️ **Bảo vệ Máy Bơm chống Cháy Khô (Dry-Run Protection):** Phao mực nước hạ xuống mức cạn ➔ Relay lập tức ngắt máy bơm 220V và gửi thông báo cảnh báo PUSH tới điện thoại.
-- ⚡ **Cơ chế Tự chủ Offline (Failsafe Mode):** Khi mất kết nối Wifi/Internet, ESP32 tự nhảy về lịch tưới chu kỳ lưu trong bộ nhớ Flash (`Preferences`), duy trì tưới đúng giờ 24/7 mà không bị gián đoạn.
+* **Software and IoT Upgrade Solution:**
+  * Addition of an **ESP32 microcontroller** with Wi-Fi and 4G connectivity.
+  * Integration of rain detection sensors, ambient temperature/humidity sensors (DHT22), and water tank float switches.
+  * Development of **C++ Firmware (Dual-Core execution with Offline Failsafe)** and a **Mobile Application Interface (Blynk / MQTT)** for remote control and real-time monitoring.
 
 ---
 
-## 🔌 Sơ đồ Đấu nối Phần cứng (Level 1)
+## Core Software & IoT Features
+
+- **Remote Control and Configuration:** Adjust watering and pause durations, or manually trigger the pump via 4G/Wi-Fi from anywhere.
+- **Rain Sensor Override:** Detects rainfall instantly and suspends current watering cycles to preserve nutrient concentrations and save energy.
+- **Dry-Run Protection:** Triggers an immediate pump shutdown via relay when the reservoir float switch detects low water levels, accompanied by push notification alerts.
+- **Offline Failsafe Execution:** If Wi-Fi or Internet connectivity is interrupted, the ESP32 automatically reverts to internal interval timers stored in non-volatile flash memory (`Preferences`), ensuring uninterrupted 24/7 operation.
+
+---
+
+## Hardware Pinout Diagram
 
 ```
                        +-------------------+
                        |    ESP32 DEVKIT   |
                        |                   |
-        [5V Nguồn] ----| VIN           GND |---- [GND Chung]
-        [3.3V Out] ----| 3V3          GPIO2 |---- [LED Trạng thái]
-   [Relay Bơm In] ----| GPIO26        GPIO4 |---- [DHT22 Data]
-  [Cảm biến Mưa DO]---| GPIO27       GPIO14 |---- [Phao Cạn Nước DO]
+        [5V Power] ----| VIN           GND |---- [Common GND]
+        [3.3V Out] ----| 3V3          GPIO2 |---- [Status LED]
+   [Pump Relay In] ----| GPIO26        GPIO4 |---- [DHT22 Data]
+  [Rain Sensor DO] ----| GPIO27       GPIO14 |---- [Float Switch DO]
                        +-------------------+
 ```
 
 ---
 
-## 📂 Cấu trúc Thư mục Dự án
+## Repository Structure
 
 ```text
 Hydroponic-farming-project/
-├── README.md                           # Tài liệu giới thiệu dự án (File này)
-├── DOC_HE_THONG_THUY_CANH_ESP32.md     # Tài liệu hướng dẫn kỹ thuật cho thành viên team
-├── feature_list.json                   # Danh mục quản lý tính năng và tiêu chí nghiệm thu
-├── image/                              # Hình ảnh hiện trạng phần cứng & 5 trụ thủy canh
+├── README.md                           # Project documentation (This file)
+├── DOC_HE_THONG_THUY_CANH_ESP32.md     # Team technical documentation
+├── feature_list.json                   # Feature tracking and verification requirements
+├── image/                              # Hardware and current system setup photos
 │   ├── setup.jpg
 │   ├── electronictimer.jpg
 │   ├── trunuoc.jpg
 │   └── ...
-└── plans/                              # Kế hoạch phát triển phần mềm chi tiết
+└── plans/                              # Detailed software planning and specifications
     ├── hydroponic-esp32-level1/
-    │   ├── spec.md                     # Đặc tả yêu cầu kỹ thuật (Specification)
-    │   ├── plan.md                     # Kế hoạch triển khai tổng thể
-    │   ├── phase-01-hardware-pinout.md # Thiết kế Sơ đồ mạch
-    │   ├── phase-02-firmware-core.md   # Thiết kế Firmware & State Machine
-    │   ├── phase-03-blynk-mqtt-integration.md # Tích hợp Cloud App & PUSH Alert
-    │   └── phase-04-failsafe-testing.md       # Kịch bản kiểm thử nghiệm thu
-    └── reports/                        # Báo cáo brainstorm khảo sát ban đầu
+    │   ├── spec.md                     # Technical requirements specification
+    │   ├── plan.md                     # Overall implementation plan
+    │   ├── phase-01-hardware-pinout.md # Circuit and pinout design
+    │   ├── phase-02-firmware-core.md   # Firmware state machine design
+    │   ├── phase-03-blynk-mqtt-integration.md # Cloud app & push alert integration
+    │   └── phase-04-failsafe-testing.md       # Verification test suite
+    └── reports/                        # Initial brainstorm and analysis reports
 ```
 
 ---
 
-## 📖 Tài liệu Tham khảo
+## Related Documentation
 
-- [Tài liệu Chi tiết cho Team Phát triển](file:///d:/Project/FptProject/Hydroponic-farming-project/DOC_HE_THONG_THUY_CANH_ESP32.md)
-- [Đặc tả Kỹ thuật (Spec.md)](file:///d:/Project/FptProject/Hydroponic-farming-project/plans/hydroponic-esp32-level1/spec.md)
-- [Kế hoạch Chi tiết (Plan.md)](file:///d:/Project/FptProject/Hydroponic-farming-project/plans/hydroponic-esp32-level1/plan.md)
+- [Technical Documentation (Vietnamese)](file:///d:/Project/FptProject/Hydroponic-farming-project/DOC_HE_THONG_THUY_CANH_ESP32.md)
+- [Technical Specification (spec.md)](file:///d:/Project/FptProject/Hydroponic-farming-project/plans/hydroponic-esp32-level1/spec.md)
+- [Implementation Plan (plan.md)](file:///d:/Project/FptProject/Hydroponic-farming-project/plans/hydroponic-esp32-level1/plan.md)
 
 ---
 
-*Project developed for Hydroponic Smart Agriculture Upgrade.*
+*Project developed for Hydroponic Smart Agriculture Software & IoT Upgrade.*
