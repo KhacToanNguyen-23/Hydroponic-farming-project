@@ -38,5 +38,35 @@
     "evidence": "",
     "notes": "",
     "priority": "P2"
+  },
+  {
+    "id": "climate-adaptive-watering",
+    "title": "Thuật toán bù trừ thời gian tưới theo nhiệt độ môi trường",
+    "user_visible_behavior": "Rễ cây không bị khô héo khi thời tiết giữa trưa quá nắng nóng (> 35°C)",
+    "verification_command": "Khi DHT22 đo được nhiệt độ > 35°C, ESP32 tự động tăng thời lượng tưới 30% và giảm thời gian nghỉ 20%",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "Đóng góp từ thành viên team",
+    "priority": "P2"
+  },
+  {
+    "id": "power-outage-alert",
+    "title": "Cảnh báo mất điện lưới 220V qua nguồn pin Mini UPS 5V",
+    "user_visible_behavior": "Người dùng nhận được thông báo PUSH ngay khi cúp điện lưới để xử lý kịp thời",
+    "verification_command": "Ngắt nguồn 220V, ESP32 chạy pin dự phòng Mini UPS 5V gửi PUSH Alert Mất điện lưới 220V tới điện thoại trong < 5 giây",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "Đóng góp từ thành viên team",
+    "priority": "P2"
+  },
+  {
+    "id": "rc-snubber-noise-filter",
+    "title": "Mạch lọc chống nhiễu RC Snubber dập xung điện từ đóng ngắt máy bơm",
+    "user_visible_behavior": "ESP32 hoạt động ổn định 24/7 không bị giật reset do xung điện từ máy bơm 220V gây ra",
+    "verification_command": "Thực hiện Bật/Tắt máy bơm 100 lần liên tục không xuất hiện hiện tượng reset vi điều khiển ESP32",
+    "status": "not_started",
+    "evidence": "",
+    "notes": "Đóng góp từ thành viên team",
+    "priority": "P2"
   }
 ]

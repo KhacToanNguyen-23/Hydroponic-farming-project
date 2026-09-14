@@ -20,20 +20,25 @@ The existing 5-tower outdoor hydroponic farming system is already operational. H
   * Adjusting irrigation/pause durations required physical interaction with buttons at the outdoor control panel.
   * Irrigation ran strictly on fixed time slots. During **heavy rain**, the system continued watering, leading to wasted electricity, root oversaturation, and nutrient solution dilution.
   * In the event of a **depleted water reservoir**, the pump continued to run, risking 220V AC pump motor burn-out.
-  * No remote monitoring for ambient temperature and humidity while away from the site.
+  * Power outages caused the entire system to go down silently without any remote notification.
+  * Inductive voltage spikes from switching 220V AC pump motors could cause microcontroller instability or resets.
 
 * **Software and IoT Upgrade Solution:**
   * Addition of an **ESP32 microcontroller** with Wi-Fi and 4G connectivity.
-  * Integration of rain detection sensors, ambient temperature/humidity sensors (DHT22), and water tank float switches.
-  * Development of **C++ Firmware (Dual-Core execution with Offline Failsafe)** and a **Mobile Application Interface (Blynk / MQTT)** for remote control and real-time monitoring.
+  * Integration of rain detection sensors, ambient climate sensors (DHT22/SHT30), reservoir float switches, and a 5V Mini UPS backup module.
+  * Inclusion of **RC Snubber noise filters** across 220V relay contacts to suppress inductive spikes and prevent ESP32 resets.
+  * Development of **C++ Firmware (Dual-Core execution, Climate Compensation, and Offline Failsafe)** & **Mobile Application Interface (Blynk / MQTT)**.
 
 ---
 
 ## Core Software & IoT Features
 
 - **Remote Control and Configuration:** Adjust watering and pause durations, or manually trigger the pump via 4G/Wi-Fi from anywhere.
-- **Rain Sensor Override:** Detects rainfall instantly and suspends current watering cycles to preserve nutrient concentrations and save energy.
+- **Climate Compensation Algorithm:** Automatically adjusts irrigation intervals when ambient temperature exceeds 35°C (increases watering duration by 30% and reduces pause duration by 20%) to prevent root dehydration during hot afternoons.
+- **Rain Sensor Override:** Detects rainfall instantly and suspends current watering cycles to preserve nutrient concentrations and save energy. Includes periodic maintenance reminders on the app for sensor cleaning.
 - **Dry-Run Protection:** Triggers an immediate pump shutdown via relay when the reservoir float switch detects low water levels, accompanied by push notification alerts.
+- **Power Outage Alert:** A 5V Mini UPS backup circuit keeps the ESP32 alive during 220V grid failure, triggering an immediate "220V Power Grid Lost" push alert to the mobile device.
+- **RC Snubber Noise Filtering:** Hardware RC snubber circuit prevents inductive EMF spikes from restarting the ESP32 during pump motor switching operations.
 - **Offline Failsafe Execution:** If Wi-Fi or Internet connectivity is interrupted, the ESP32 automatically reverts to internal interval timers stored in non-volatile flash memory (`Preferences`), ensuring uninterrupted 24/7 operation.
 
 ---
@@ -44,10 +49,11 @@ The existing 5-tower outdoor hydroponic farming system is already operational. H
                        +-------------------+
                        |    ESP32 DEVKIT   |
                        |                   |
-        [5V Power] ----| VIN           GND |---- [Common GND]
+        [5V Mini UPS] -| VIN           GND |---- [Common GND]
         [3.3V Out] ----| 3V3          GPIO2 |---- [Status LED]
    [Pump Relay In] ----| GPIO26        GPIO4 |---- [DHT22 Data]
   [Rain Sensor DO] ----| GPIO27       GPIO14 |---- [Float Switch DO]
+ [220V Grid Sense] ----| GPIO12       GPIO13 |---- [Light Sensor BH1750]
                        +-------------------+
 ```
 
