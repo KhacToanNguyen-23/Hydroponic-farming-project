@@ -5,45 +5,26 @@
 
 ---
 
-## 1. Kịch bản Kiểm thử Nghiệm thu (Test Suites)
+## 1. Kịch bản Kiểm thử Nghiệm thu
 
-### Test Suite 1: Điều khiển Từ xa qua 4G (Remote Control Test)
-- **Các bước:**
-  1. Điện thoại bật 4G (tắt Wifi).
-  2. Bấm nút Bật Bơm trên App Blynk / MQTT.
-  3. Thay đổi Thời gian Tưới từ 15 phút thành 20 phút trên App.
-- **Kỳ vọng:**
-  * Relay đóng lập tức, máy bơm chạy, đèn LED tín hiệu trên ESP32 sáng (< 2 giây).
-  * ESP32 lưu giá trị `20 phút` vào bộ nhớ Flash.
+### Test Suite 1: Thuật toán Bù nhiệt độ môi trường (> 35°C)
+- **Các bước:** Dùng máy sấy tóc / hơi nóng thổi vào cảm biến DHT22 cho đến khi giá trị > 35°C.
+- **Kỳ vọng:** Thời gian tưới tự động tăng 30%, thời gian nghỉ tự động giảm 20%. App hiển thị trạng thái `Đang bù nhiệt giữa trưa`.
 
 ---
 
-### Test Suite 2: Giả lập Mưa (Rain Override Test)
-- **Các bước:**
-  1. Để máy bơm đang ở trạng thái BẬT theo lịch tưới.
-  2. Nhỏ 2-3 giọt nước lên tấm cảm biến mưa ngoài trời.
-- **Kỳ vọng:**
-  * Relay lập tức NGẮT máy bơm trong vòng < 2 giây.
-  * App hiển thị trạng thái `Trời mưa - Tạm dừng tưới`.
-  * Dùng khăn lau khô cảm biến ➔ Sau 5 giây máy bơm khôi phục chạy lại theo lịch.
+### Test Suite 2: Cảnh báo Mất điện 220V qua Mini UPS 5V
+- **Các bước:** Rút phích cắm nguồn 220V AC của tủ điện (chỉ để ESP32 chạy pin Mini UPS 5V).
+- **Kỳ vọng:** Trong vòng `< 5 giây`, điện thoại nhận được Push Notification: *"⚠️ CẢNH BÁO: Mất điện lưới 220V!"*.
 
 ---
 
-### Test Suite 3: Bảo vệ Chống Cháy Máy Bơm khi Cạn Nước (Dry-run Protection)
-- **Các bước:**
-  1. Cho máy bơm đang chạy.
-  2. Dùng tay nhấc phao mực nước trong thùng chứa xuống (giả lập cạn nước).
-- **Kỳ vọng:**
-  * Relay lập tức NGẮT máy bơm ngay lập tức (0.5 giây).
-  * Điện thoại nhận Push Notification: "⚠️ CANH BÁO: Thùng nước hồi lưu bị cạn!".
-  * Thử ấn nút Bật Bơm trên App ➔ ESP32 từ chối bật bơm và gửi cảnh báo "Không thể bật máy bơm do thùng cạn nước".
+### Test Suite 3: Kiểm thử Chống nhiễu Máy bơm 220V với Mạch RC Snubber
+- **Các bước:** Cho ESP32 kích Bật/Tắt Relay máy bơm 220V liên tục 100 lần (mỗi lần cách nhau 2 giây).
+- **Kỳ vọng:** Mạch RC Snubber dập tắt hoàn toàn xung cảm ứng điện từ, ESP32 hoạt động ổn định 100% không bị reset hay treo giật.
 
 ---
 
-### Test Suite 4: Kiềm thử Đứt Mạng Wifi (Offline Failsafe Test)
-- **Các bước:**
-  1. Cài đặt lịch tưới: Bật 1 phút - Nghỉ 1 phút.
-  2. Rút cắm nguồn Router Wifi (Tắt hoàn toàn mạng Wifi).
-- **Kỳ vọng:**
-  * ESP32 phát hiện mất Wifi, vẫn duy trì đếm thời gian: Bật 1 phút ➔ Tắt 1 phút ➔ Bật 1 phút đều đặn.
-  * Cắm lại Router Wifi ➔ ESP32 tự kết nối lại với Cloud trong vòng 30 giây mà không cần reset nguồn.
+### Test Suite 4: Giả lập Mưa & Cạn Nước
+- **Các bước:** Nhỏ nước lên cảm biến mưa / nhấc phao cạn nước trong thùng chứa.
+- **Kỳ vọng:** Máy bơm ngắt lập tức (< 2 giây) và gửi thông báo cảnh báo về Smartphone.
